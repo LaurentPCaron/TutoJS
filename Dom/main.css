@@ -1,0 +1,34 @@
+h1 {
+  color: purple;
+  font-size: 3rem;
+}
+
+h1:hover {
+  color: #b685e4;
+}
+
+.special {
+  border: blue solid 1px;
+  font-size: 2.5rem;
+  color: blue;
+}
+
+input[type='password'] {
+  height: 50px;
+  width: 100px;
+}
+
+#img_lamp {
+  width: 250px;
+}
+
+.todo {
+  font-size: 2.8rem;
+  color: olive;
+}
+
+.todo-completed {
+  color: gray;
+  text-decoration: line-through;
+  opacity: 50%;
+}
