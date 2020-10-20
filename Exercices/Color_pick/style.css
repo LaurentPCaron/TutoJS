@@ -1,0 +1,10 @@
+#title,
+#boxes {
+  display: flex;
+  justify-content: center;
+}
+
+.box {
+  height: 200px;
+  width: 200px;
+}

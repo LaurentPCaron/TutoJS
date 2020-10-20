@@ -1,0 +1,21 @@
+body {
+  margin: 0;
+  background-image: url('img/background.png');
+}
+
+section {
+  position: relative;
+}
+
+#tails,
+#ring {
+  position: absolute;
+  height: 50px;
+  width: 50px;
+}
+
+#tails img {
+  position: absolute;
+  height: 50px;
+  width: 50px;
+}
