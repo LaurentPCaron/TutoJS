@@ -32,7 +32,7 @@
 //   });
 // }
 
-//Pormise.all
+//Promise.all
 //###########
 
 async function getSomePkmn(qte) {
