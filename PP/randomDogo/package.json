@@ -1,0 +1,19 @@
+{
+  "name": "meteo",
+  "version": "1.0.0",
+  "description": "Show the weather on command line",
+  "main": "index.js",
+  "author": "Laurent-Philippe Caron",
+  "license": "MIT",
+  "scripts": {
+    "test": "nyc mocha ./tests/"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.2.1",
+    "nyc": "^15.1.0"
+  },
+  "dependencies": {
+    "axios": "^0.21.1"
+  }
+}
