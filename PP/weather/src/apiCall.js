@@ -1,5 +1,7 @@
 const axios = require('axios').default;
 
+const api = require('./publicIp');
+
 const callAPI = async (endUrl, query) => {
   return await axios
     .get(`https://www.metaweather.com/api${endUrl}`, {
@@ -14,11 +16,11 @@ const callAPI = async (endUrl, query) => {
     });
 };
 
-const fetchCityId = async query => {
-  return await callAPI('/location/search/', query)
+const fetchLocationId = async locationName => {
+  return await callAPI('/location/search/', locationName)
     .then(results => {
       if (results.length === 0) {
-        throw new Error(`No result for "${query}"`);
+        throw new Error(`No result for "${locationName}"`);
       }
       return results.map(result => {
         return { title: result.title, locationId: result.woeid };
@@ -48,4 +50,27 @@ const fetchWeather = async locationID => {
       throw new Error(err.message);
     });
 };
-module.exports = { fetchCityId, fetchWeather };
+
+const fetchLocationName = async () => {
+  const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+
+  const ip = await api.getPublicIp();
+  if (!ipRegex.test(ip)) {
+    throw new Error('IP address invalid');
+  }
+  return await axios
+    .get(`http://ip-api.com/json/${ip}`)
+    .then(({ data }) => {
+      return data.city;
+    })
+    .catch(err => {
+      const errorMessage = `${err.response.status}:${err.response.statusText}`;
+      throw new Error(errorMessage);
+    });
+};
+
+module.exports = {
+  fetchLocationId,
+  fetchWeather,
+  fetchLocationName,
+};
