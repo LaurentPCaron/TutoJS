@@ -1,6 +1,9 @@
 const prompt = require('prompt');
 
 const printLocationChoises = choices => {
+  if (!Array.isArray(choices)) {
+    throw new Error('Argument invalid');
+  }
   return new Promise((resolve, reject) => {
     let message = '\n***Select a location****\n0- Cancel\n';
     choices.forEach((choice, index) => {
@@ -10,7 +13,7 @@ const printLocationChoises = choices => {
       properties: {
         cityNumber: {
           message: message,
-          require: true,
+          required: true,
           warning: 'Invalide choice',
           conform: value => {
             const val = parseInt(value, 10);
@@ -23,16 +26,11 @@ const printLocationChoises = choices => {
     prompt.delimiter = '> ';
 
     prompt.start();
+
     prompt.get(schema, (err, result) => {
-      if (err) {
-        console.log(err);
-      }
       resolve(result.cityNumber - 1);
     });
   });
 };
 
-/* printLocationChoises(['Montréal', 'Edmonton']).then(result => {
-  console.log(result);
-}); */
 module.exports = { printLocationChoises };
