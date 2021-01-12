@@ -9,7 +9,7 @@ const ip = require('../src/publicIp');
 const mockWeather = require('./mockResponse/weather.json');
 const mockIpLocation = require('./mockResponse/ipLocation.json');
 
-context.skip('apiCall', () => {
+context('apiCall', () => {
   context('fetchLocationId', () => {
     it('should return an error message if the api throw an error', async () => {
       const scope = nock('https://www.metaweather.com')
@@ -124,7 +124,7 @@ context.skip('apiCall', () => {
       try {
         expect(await apiCall.fetchLocationName()).to.be.undefined;
       } catch (err) {
-        expect(err.message).equal('IP address invalid');
+        expect(err.message).equal('apiCal.fetchLocation\nIP address invalid');
       }
     });
 
@@ -137,7 +137,7 @@ context.skip('apiCall', () => {
       try {
         expect(await apiCall.fetchLocationName()).to.be.undefined;
       } catch (err) {
-        expect(err.message).equal('404:null');
+        expect(err.message).equal('apiCal.fetchLocation\n404:null');
       }
 
       scope.done();
@@ -151,7 +151,7 @@ context.skip('apiCall', () => {
         .get('/json/24.48.0.1')
         .reply(200, mockIpLocation);
 
-      expect(await apiCall.fetchLocationName()).to.deep.equal('Montreal');
+      expect(await apiCall.fetchLocationName()).to.deep.equal('Montréal');
 
       scope.done();
       nock.cleanAll();

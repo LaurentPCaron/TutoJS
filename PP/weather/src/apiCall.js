@@ -56,7 +56,7 @@ const fetchLocationName = async () => {
 
   const ip = await api.getPublicIp();
   if (!ipRegex.test(ip)) {
-    throw new Error('IP address invalid');
+    throw new Error('apiCal.fetchLocation\nIP address invalid');
   }
   return await axios
     .get(`http://ip-api.com/json/${ip}`)
@@ -65,7 +65,7 @@ const fetchLocationName = async () => {
     })
     .catch(err => {
       const errorMessage = `${err.response.status}:${err.response.statusText}`;
-      throw new Error(errorMessage);
+      throw new Error(`apiCal.fetchLocation\n${errorMessage}`);
     });
 };
 
