@@ -3,5 +3,15 @@
     "email": "eggman@eggempire.pizz",
     "password": "SonicSucks",
     "id": "8066561a"
+  },
+  {
+    "id": "320d14e8",
+    "email": "sonic@fast.com",
+    "password": "1234"
+  },
+  {
+    "id": "7a00fbee",
+    "email": "sonic2@fast.com",
+    "password": "1234"
   }
 ]

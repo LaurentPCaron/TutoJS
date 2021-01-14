@@ -20,12 +20,20 @@ class UsersRepository {
     );
   }
 
-  async create(attrs: iUser): Promise<void> {
-    attrs.id = this.randomId();
+  async create({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }): Promise<iUser> {
+    const user: iUser = { id: this.randomId(), email, password };
 
     const records = await this.getAll();
-    records.push(attrs);
+    records.push(user);
     await this.writeAll(records);
+
+    return user;
   }
 
   async writeAll(records: iUser[]): Promise<void> {
@@ -49,7 +57,7 @@ class UsersRepository {
 
   async update(id: string, attrs: any): Promise<void> {
     const records = await this.getAll();
-    const record = records.find((rec: { id: string }) => rec.id === id);
+    const record = records.find(rec => rec.id === id);
     if (!record) {
       throw new Error(`Record with the id ${id} not found`);
     }

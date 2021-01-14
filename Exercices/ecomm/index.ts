@@ -1,15 +1,22 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import cookieSession from 'cookie-session';
 
 import usersRepo from './repositories/users';
 
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  cookieSession({
+    keys: ['tf2YN1uPWjHzPWhK3npE'],
+  })
+);
 
 app.get('/', (req, res) => {
   res.send(`
     <div>
+    Your id is: ${req.session ? req.session.userId : null}
         <form method="POST">
             <input name="email" placeholder="email"/>
             <input name="password" placeholder="password"/>
@@ -48,6 +55,10 @@ app.post('/', async (req, res) => {
   if (password !== passwordConfirmation) {
     return res.send('Password must match');
   }
+
+  const user = await usersRepo.create({ email, password });
+
+  if (req.session) req.session.userId = user.id;
 
   res.send('Fartwhisle');
 });

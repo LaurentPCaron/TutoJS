@@ -41,11 +41,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var body_parser_1 = __importDefault(require("body-parser"));
+var cookie_session_1 = __importDefault(require("cookie-session"));
 var users_1 = __importDefault(require("./repositories/users"));
 var app = express_1.default();
 app.use(body_parser_1.default.urlencoded({ extended: true }));
+app.use(cookie_session_1.default({
+    keys: ['tf2YN1uPWjHzPWhK3npE'],
+}));
 app.get('/', function (req, res) {
-    res.send("\n    <div>\n        <form method=\"POST\">\n            <input name=\"email\" placeholder=\"email\"/>\n            <input name=\"password\" placeholder=\"password\"/>\n            <input name=\"passwordConfirmation\" placeholder=\"password confirmation\"/>\n            <button>Sign Up</button>\n        </form>\n    </div>\n    ");
+    res.send("\n    <div>\n    Your id is: " + (req.session ? req.session.userId : null) + "\n        <form method=\"POST\">\n            <input name=\"email\" placeholder=\"email\"/>\n            <input name=\"password\" placeholder=\"password\"/>\n            <input name=\"passwordConfirmation\" placeholder=\"password confirmation\"/>\n            <button>Sign Up</button>\n        </form>\n    </div>\n    ");
 });
 //Manual middleware
 /* const bodyParser=(req:any,res:any,next:any)=>{
@@ -65,7 +69,7 @@ app.get('/', function (req, res) {
     
 } */
 app.post('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, email, password, passwordConfirmation, existingUser;
+    var _a, email, password, passwordConfirmation, existingUser, user;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -79,6 +83,11 @@ app.post('/', function (req, res) { return __awaiter(void 0, void 0, void 0, fun
                 if (password !== passwordConfirmation) {
                     return [2 /*return*/, res.send('Password must match')];
                 }
+                return [4 /*yield*/, users_1.default.create({ email: email, password: password })];
+            case 2:
+                user = _b.sent();
+                if (req.session)
+                    req.session.userId = user.id;
                 res.send('Fartwhisle');
                 return [2 /*return*/];
         }

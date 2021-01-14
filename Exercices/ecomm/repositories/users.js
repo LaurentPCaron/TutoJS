@@ -66,21 +66,22 @@ var UsersRepository = /** @class */ (function () {
             });
         });
     };
-    UsersRepository.prototype.create = function (attrs) {
+    UsersRepository.prototype.create = function (_a) {
+        var email = _a.email, password = _a.password;
         return __awaiter(this, void 0, void 0, function () {
-            var records;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var user, records;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        attrs.id = this.randomId();
+                        user = { id: this.randomId(), email: email, password: password };
                         return [4 /*yield*/, this.getAll()];
                     case 1:
-                        records = _a.sent();
-                        records.push(attrs);
+                        records = _b.sent();
+                        records.push(user);
                         return [4 /*yield*/, this.writeAll(records)];
                     case 2:
-                        _a.sent();
-                        return [2 /*return*/];
+                        _b.sent();
+                        return [2 /*return*/, user];
                 }
             });
         });
