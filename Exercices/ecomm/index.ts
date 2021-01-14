@@ -1,12 +1,14 @@
 import express from 'express';
-import bodyParser from 'body-parser'
+import bodyParser from 'body-parser';
+
+import usersRepo from './repositories/users';
 
 const app = express();
 
-app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/',(req,res)=>{
-    res.send(`
+app.get('/', (req, res) => {
+  res.send(`
     <div>
         <form method="POST">
             <input name="email" placeholder="email"/>
@@ -15,7 +17,7 @@ app.get('/',(req,res)=>{
             <button>Sign Up</button>
         </form>
     </div>
-    `)
+    `);
 });
 
 //Manual middleware
@@ -36,11 +38,20 @@ app.get('/',(req,res)=>{
     
 } */
 
-app.post('/',(req,res)=>{
-    console.log(req.body)
-    res.send('Fartwhisle')
-})
+app.post('/', async (req, res) => {
+  const { email, password, passwordConfirmation } = req.body;
 
-app.listen(3000, ()=>{
-    console.log('J\'técoute')
-})
+  const existingUser = await usersRepo.getOneBy({ email });
+  if (existingUser) {
+    return res.send('Email in use');
+  }
+  if (password !== passwordConfirmation) {
+    return res.send('Password must match');
+  }
+
+  res.send('Fartwhisle');
+});
+
+app.listen(3000, () => {
+  console.log("J'técoute");
+});
