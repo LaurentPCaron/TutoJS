@@ -48,7 +48,7 @@ app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(cookie_session_1.default({
     keys: ['tf2YN1uPWjHzPWhK3npE'],
 }));
-app.get('/', function (req, res) {
+app.get('/signup', function (req, res) {
     res.send("\n    <div>\n    Your id is: " + (req.session ? req.session.userId : null) + "\n        <form method=\"POST\">\n            <input name=\"email\" placeholder=\"email\"/>\n            <input name=\"password\" placeholder=\"password\"/>\n            <input name=\"passwordConfirmation\" placeholder=\"password confirmation\"/>\n            <button>Sign Up</button>\n        </form>\n    </div>\n    ");
 });
 //Manual middleware
@@ -68,7 +68,7 @@ app.get('/', function (req, res) {
     }
     
 } */
-app.post('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+app.post('/signup', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, email, password, passwordConfirmation, existingUser, user;
     return __generator(this, function (_b) {
         switch (_b.label) {
@@ -93,6 +93,37 @@ app.post('/', function (req, res) { return __awaiter(void 0, void 0, void 0, fun
         }
     });
 }); });
+app.get('/signin', function (req, res) {
+    res.send("\n  <div>\n      <form method=\"POST\">\n          <input name=\"email\" placeholder=\"email\"/>\n          <input name=\"password\" placeholder=\"password\"/>\n          <button>Sign In</button>\n      </form>\n  </div>\n  ");
+});
+app.post('/signin', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, email, password, user;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _a = req.body, email = _a.email, password = _a.password;
+                return [4 /*yield*/, users_1.default.getOneBy({ email: email })];
+            case 1:
+                user = _b.sent();
+                if (!user) {
+                    return [2 /*return*/, res.send('No acount with this email found')];
+                }
+                return [4 /*yield*/, users_1.default.comparePasswords(user.password, password)];
+            case 2:
+                if (!(_b.sent())) {
+                    return [2 /*return*/, res.send('Invalide password')];
+                }
+                if (req.session)
+                    req.session.userId = user.id;
+                res.send("You're signed in");
+                return [2 /*return*/];
+        }
+    });
+}); });
+app.get('/signout', function (req, res) {
+    req.session = null;
+    res.send("You're logged out");
+});
 app.listen(3000, function () {
     console.log("J'técoute");
 });

@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -41,6 +52,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var fs_1 = require("fs");
 var crypto_1 = __importDefault(require("crypto"));
+var util_1 = __importDefault(require("util"));
+var scrypt = util_1.default.promisify(crypto_1.default.scrypt);
 var UsersRepository = /** @class */ (function () {
     function UsersRepository(filename) {
         this.filename = filename;
@@ -69,19 +82,39 @@ var UsersRepository = /** @class */ (function () {
     UsersRepository.prototype.create = function (_a) {
         var email = _a.email, password = _a.password;
         return __awaiter(this, void 0, void 0, function () {
-            var user, records;
+            var user, salt, buf, records, record;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        user = { id: this.randomId(), email: email, password: password };
-                        return [4 /*yield*/, this.getAll()];
+                        user = { id: this.randomId(), email: email };
+                        salt = crypto_1.default.randomBytes(8).toString('hex');
+                        return [4 /*yield*/, scrypt(password, salt, 64)];
                     case 1:
-                        records = _b.sent();
-                        records.push(user);
-                        return [4 /*yield*/, this.writeAll(records)];
+                        buf = _b.sent();
+                        return [4 /*yield*/, this.getAll()];
                     case 2:
+                        records = _b.sent();
+                        record = __assign(__assign({}, user), { password: buf.toString('hex') + "." + salt });
+                        records.push(record);
+                        return [4 /*yield*/, this.writeAll(records)];
+                    case 3:
                         _b.sent();
-                        return [2 /*return*/, user];
+                        return [2 /*return*/, record];
+                }
+            });
+        });
+    };
+    UsersRepository.prototype.comparePasswords = function (saved, supplied) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, hashed, salt, hashedSupplied;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = saved.split('.'), hashed = _a[0], salt = _a[1];
+                        return [4 /*yield*/, scrypt(supplied, salt, 64)];
+                    case 1:
+                        hashedSupplied = _b.sent();
+                        return [2 /*return*/, hashed === hashedSupplied.toString('hex')];
                 }
             });
         });

@@ -1,5 +1,8 @@
 import { accessSync, promises, writeFileSync } from 'fs';
 import crypto from 'crypto';
+import util from 'util';
+
+const scrypt: any = util.promisify(crypto.scrypt);
 
 class UsersRepository {
   filename: string;
@@ -27,13 +30,29 @@ class UsersRepository {
     email: string;
     password: string;
   }): Promise<iUser> {
-    const user: iUser = { id: this.randomId(), email, password };
+    const user: { id: string; email: string } = { id: this.randomId(), email };
+
+    const salt = crypto.randomBytes(8).toString('hex');
+
+    const buf = await scrypt(password, salt, 64);
 
     const records = await this.getAll();
-    records.push(user);
+    const record: iUser = {
+      ...user,
+      password: `${buf.toString('hex')}.${salt}`,
+    };
+    records.push(record);
+
     await this.writeAll(records);
 
-    return user;
+    return record;
+  }
+
+  async comparePasswords(saved: string, supplied: string) {
+    const [hashed, salt] = saved.split('.');
+    const hashedSupplied = await scrypt(supplied, salt, 64);
+
+    return hashed === hashedSupplied.toString('hex');
   }
 
   async writeAll(records: iUser[]): Promise<void> {
