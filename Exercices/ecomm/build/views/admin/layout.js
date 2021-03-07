@@ -1,0 +1,6 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = (function (_a) {
+    var content = _a.content;
+    return "\n  <!DOCTYPE html>\n  <html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Shop</title>\n    <link href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css\" rel=\"stylesheet\">\n    <link href=\"/css/main.css\" rel=\"stylesheet\">\n    <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css\"></link>\n  </head>\n\n  <body class=\"admin\">\n    <header>\n      <nav class=\"navbar navbar-bottom\">\n        <div class=\"container navbar-container\">\n          <div>\n            <a href=\"/admin/products\">\n              <h3 class=\"title\">Admin Panel</h3>\n            </a>\n          </div>\n          <div class=\"navbar-item\">\n            <div class=\"navbar-buttons\">\n              <div class=\"navbar-item\">\n                <a href=\"/admin/products\"><i class=\"fa fa-star\"></i> Products</a>\n              </div>\n            </div>\n          </div>\n        </div>\n      </nav>\n    </header>\n    <div class=\"container\">\n      " + content + "\n    </div>\n  </body>\n</html>\n  ";
+});
